@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شبكة تواصل إسطورية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff416c;
+            --success: #00b09b;
+            --warning: #ffd200;
+            --dark: #1a202c;
+            --light: #f8f9fa;
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--warning) 100%);
+            --gradient-success: linear-gradient(135deg, var(--success) 0%, #96c93d 100%);
+            --gradient-dark: linear-gradient(135deg, var(--dark) 0%, #2d3748 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 15px 50px rgba(0, 0, 0, 0.2);
+            --border-radius: 16px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: var(--gradient-dark);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+            height: 90vh;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* النجوم المتحركة في الخلفية */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        /* شاشة البداية */
+        .screen {
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: var(--transition);
+        }
+
+        .screen.active {
+            display: flex;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* شاشة الترحيب */
+        .welcome-screen {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .app-title {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-subtitle {
+            font-size: 1rem;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            margin: 10px 0;
+            width: 100%;
+            max-width: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* شاشة التسجيل */
+        .form-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideUp 0.8s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* شاشة المستخدمين */
+        .header {
+            padding: 20px;
+            background: var(--gradient-primary);
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .user-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 15px;
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .user-card:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-left: 15px;
+            background: var(--gradient-primary);
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .user-status {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+
+        .status-online {
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+        }
+
+        .status-offline {
+            background: var(--accent);
+        }
+
+        /* شاشة الدردشة */
+        .chat-header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: var(--gradient-primary);
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(360deg);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            animation: messageIn 0.5s ease;
+        }
+
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.my-message {
+            align-items: flex-end;
+        }
+
+        .message.other-message {
+            align-items: flex-start;
+        }
+
+        .message-bubble {
+            padding: 12px 18px;
+            border-radius: 20px;
+            max-width: 80%;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .my-message .message-bubble {
+            background: var(--gradient-primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .other-message .message-bubble {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            opacity: 0.7;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .message-input {
+            flex: 1;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .message-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .send-btn {
+            background: var(--gradient-primary);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1) rotate(20deg);
+        }
+
+        /* الإشعارات */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--gradient-success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            transform: translateX(150%);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* التكيف مع الشاشات المختلفة */
+        @media (max-width: 768px) {
+            .app-container {
+                height: 95vh;
+                border-radius: 20px;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .app-title {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .app-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="app-container">
+        <!-- شاشة الترحيب -->
+        <div class="screen welcome-screen active" id="welcomeScreen">
+            <div class="logo">
+                <i class="fas fa-comments"></i>
+            </div>
+            <h1 class="app-title">شبكة تواصل إسطورية</h1>
+            <p class="app-subtitle">تواصل مع أصدقائك بطريقة أسطورية</p>
+            
+            <button class="btn btn-primary" onclick="showScreen('loginScreen')">
+                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+            </button>
+            
+            <button class="btn btn-secondary" onclick="showScreen('registerScreen')">
+                <i class="fas fa-user-plus"></i> إنشاء حساب جديد
+            </button>
+        </div>
+        
+        <!-- شاشة تسجيل الدخول -->
+        <div class="screen" id="loginScreen">
+            <div class="form-container">
+                <h2 class="form-title">تسجيل الدخول</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">اسم المستخدم</label>
+                    <input type="text" class="form-input" id="loginName" placeholder="أدخل اسم المستخدم">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">كلمة المرور</label>
+                    <input type="password" class="form-input" id="loginPassword" placeholder="أدخل كلمة المرور">
+                </div>
+                
+                <button class="btn btn-primary" onclick="login()">
+                    <i class="fas fa-sign-in-alt"></i> دخول
+                </button>
+                
+                <button class="btn btn-secondary" onclick="showScreen('welcomeScreen')">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </button>
+            </div>
+        </div>
+        
+        <!-- شاشة إنشاء حساب -->
+        <div class="screen" id="registerScreen">
+            <div class="form-container">
+                <h2 class="form-title">إنشاء حساب جديد</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">اسم المستخدم</label>
+                    <input type="text" class="form-input" id="registerName" placeholder="اختر اسم المستخدم">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">كلمة المرور</label>
+                    <input type="password" class="form-input" id="registerPassword" placeholder="اختر كلمة مرور قوية">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">تأكيد كلمة المرور</label>
+                    <input type="password" class="form-input" id="registerConfirmPassword" placeholder="أعد إدخال كلمة المرور">
+                </div>
+                
+                <button class="btn btn-primary" onclick="register()">
+                    <i class="fas fa-user-plus"></i> إنشاء حساب
+                </button>
+                
+                <button class="btn btn-secondary" onclick="showScreen('welcomeScreen')">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </button>
+            </div>
+        </div>
+        
+        <!-- شاشة المستخدمين -->
+        <div class="screen" id="usersScreen">
+            <div class="header">
+                <h2 class="header-title">المستخدمون المتصلون</h2>
+                <div class="user-info">
+                    <span id="currentUserName"></span>
+                    <button class="btn btn-secondary" onclick="logout()" style="padding: 8px 15px; margin: 0 10px;">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="user-list" id="usersList">
+                <!-- سيتم ملء المستخدمين هنا عبر JavaScript -->
+            </div>
+        </div>
+        
+        <!-- شاشة الدردشة -->
+        <div class="screen" id="chatScreen">
+            <div class="chat-header">
+                <div class="back-btn" onclick="showScreen('usersScreen')">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="user-info">
+                    <div class="user-name" id="chatUserName">المستخدم</div>
+                    <div class="user-status">
+                        <span class="status-indicator status-online"></span>
+                        <span id="chatUserStatus">متصل</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="messagesContainer">
+                <!-- سيتم ملء الرسائل هنا عبر JavaScript -->
+            </div>
+            
+            <div class="chat-input">
+                <input type="text" class="message-input" id="messageInput" placeholder="اكتب رسالتك هنا...">
+                <div class="send-btn" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- منطقة الإشعارات -->
+    <div class="notification" id="notification">
+        <i class="fas fa-bell"></i>
+        <span id="notificationText"></span>
+    </div>
+    
+    <!-- صوت الإشعار -->
+    <audio id="notificationSound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // إنشاء النجوم في الخلفية
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.top = Math.random() * 100 + '%';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // تبديل الشاشات
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+        
+        // إنشاء حساب جديد
+        function register() {
+            const name = document.getElementById('registerName').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (name.length < 2) {
+                showNotification('الاسم يجب أن يكون على الأقل حرفين', 'error');
+                return;
+            }
+            
+            if (password.length < 4) {
+                showNotification('كلمة المرور يجب أن تكون على الأقل 4 أحرف', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('كلمتا المرور غير متطابقتين', 'error');
+                return;
+            }
+            
+            // حفظ بيانات المستخدم في localStorage (في تطبيق حقيقي سيتم الإرسال إلى الخادم)
+            const users = JSON.parse(localStorage.getItem('chatUsers') || '[]');
+            
+            // التحقق من عدم وجود مستخدم بنفس الاسم
+            if (users.some(user => user.name === name)) {
+                showNotification('اسم المستخدم موجود مسبقاً', 'error');
+                return;
+            }
+            
+            // إضافة المستخدم الجديد
+            users.push({
+                id: Date.now().toString(),
+                name: name,
+                password: password,
+                registeredAt: new Date().toISOString()
+            });
+            
+            localStorage.setItem('chatUsers', JSON.stringify(users));
+            showNotification('تم إنشاء الحساب بنجاح', 'success');
+            
+            // تسجيل الدخول تلقائياً
+            localStorage.setItem('currentUser', JSON.stringify({ name, password }));
+            document.getElementById('currentUserName').textContent = name;
+            showScreen('usersScreen');
+            loadUsers();
+        }
+        
+        // تسجيل الدخول
+        function login() {
+            const name = document.getElementById('loginName').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            const users = JSON.parse(localStorage.getItem('chatUsers') || '[]');
+            const user = users.find(u => u.name === name && u.password === password);
+            
+            if (user) {
+                // حفظ بيانات تسجيل الدخول
+                localStorage.setItem('currentUser', JSON.stringify({ name, password }));
+                document.getElementById('currentUserName').textContent = name;
+                showScreen('usersScreen');
+                loadUsers();
+                showNotification('تم تسجيل الدخول بنجاح', 'success');
+            } else {
+                showNotification('اسم المستخدم أو كلمة المرور غير صحيحة', 'error');
+            }
+        }
+        
+        // تسجيل الخروج
+        function logout() {
+            localStorage.removeItem('currentUser');
+            showScreen('welcomeScreen');
+        }
+        
+        // تحميل قائمة المستخدمين
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem('chatUsers') || '[]');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const usersList = document.getElementById('usersList');
+            
+            usersList.innerHTML = '';
+            
+            if (users.length === 0) {
+                usersList.innerHTML = '<p style="text-align: center; padding: 20px; color: rgba(255,255,255,0.7)">لا يوجد مستخدمون بعد</p>';
+                return;
+            }
+            
+            users.forEach(user => {
+                if (user.name !== currentUser.name) {
+                    const userCard = document.createElement('div');
+                    userCard.className = 'user-card';
+                    userCard.onclick = () => openChat(user);
+                    
+                    userCard.innerHTML = `
+                        <div class="user-avatar">${user.name.charAt(0).toUpperCase()}</div>
+                        <div class="user-info">
+                            <div class="user-name">${user.name}</div>
+                            <div class="user-status">
+                                <span class="status-indicator ${Math.random() > 0.3 ? 'status-online' : 'status-offline'}"></span>
+                                <span>${Math.random() > 0.3 ? 'متصل' : 'غير متصل'}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    usersList.appendChild(userCard);
+                }
+            });
+        }
+        
+        // فتح شاشة الدردشة مع مستخدم
+        function openChat(user) {
+            document.getElementById('chatUserName').textContent = user.name;
+            document.getElementById('chatUserStatus').textContent = 'متصل';
+            showScreen('chatScreen');
+            loadMessages(user);
+        }
+        
+        // تحميل الرسائل
+        function loadMessages(user) {
+            const messagesContainer = document.getElementById('messagesContainer');
+            messagesContainer.innerHTML = '';
+            
+            // إضافة بعض الرسائل الوهمية للعرض
+            const messages = [
+                { text: 'مرحباً! كيف حالك؟', time: '10:30', isMyMessage: false },
+                { text: 'أهلاً! أنا بخير، شكراً لك. كيف حالك أنت؟', time: '10:32', isMyMessage: true },
+                { text: 'أنا أيضاً بخير، شكراً لسؤالك. هل أنت مستعد للاجتماع اليوم؟', time: '10:33', isMyMessage: false },
+                { text: 'نعم، بالطبع. لقد استعدت كل شيء للاجتماع', time: '10:35', isMyMessage: true },
+                { text: 'ممتاز! هذا رائع. سأراك هناك إذن', time: '10:36', isMyMessage: false }
+            ];
+            
+            messages.forEach(msg => {
+                addMessageToChat(msg.text, msg.time, msg.isMyMessage);
+            });
+        }
+        
+        // إضافة رسالة إلى الشاشة
+        function addMessageToChat(text, time, isMyMessage = false) {
+            const messagesContainer = document.getElementById('messagesContainer');
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${isMyMessage ? 'my-message' : 'other-message'}`;
+            
+            messageElement.innerHTML = `
+                <div class="message-bubble">${text}</div>
+                <div class="message-time">${time}</div>
+            `;
+            
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // إرسال رسالة
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (text === '') return;
+            
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            addMessageToChat(text, time, true);
+            
+            input.value = '';
+            
+            // محاكاة رد المستخدم بعد فترة
+            setTimeout(() => {
+                const responses = [
+                    'أهلاً! هذه رسالة رد تلقائي',
+                    'شكراً على رسالتك، سأرد عليك قريباً',
+                    'أنا غير متصل الآن، ولكن سأرى رسالتك لاحقاً',
+                    'هذا رائع!',
+                    'شكراً لمشاركتك هذا معي'
+                ];
+                
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                const responseTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                addMessageToChat(randomResponse, responseTime, false);
+                showNotification(`لديك رسالة جديدة من المستخدم`, 'info');
+            }, 2000);
+        }
+        
+        // عرض الإشعارات
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notification.className = `notification ${type} show`;
+            notificationText.textContent = message;
+            
+            // تشغيل صوت الإشعار
+            const sound = document.getElementById('notificationSound');
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log('Cannot play notification sound:', e));
+            
+            // إخفاء الإشعار تلقائياً بعد 3 ثوان
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // التحقق من وجود مستخدم مسجل دخوله
+        function checkLoggedIn() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                const userData = JSON.parse(currentUser);
+                document.getElementById('currentUserName').textContent = userData.name;
+                showScreen('usersScreen');
+                loadUsers();
+            }
+        }
+        
+        // تهيئة التطبيق عند تحميل الصفحة
+        window.addEventListener('load', function() {
+            createStars();
+            checkLoggedIn();
+            
+            // محاكاة إنشاء ملف data.json إذا لم يكن موجوداً
+            if (!localStorage.getItem('chatDataInitialized')) {
+                const initialData = {
+                    users: [],
+                    messages: [],
+                    settings: {
+                        theme: "default",
+                        notifications: true
+                    }
+                };
+                
+                localStorage.setItem('chatData', JSON.stringify(initialData));
+                localStorage.setItem('chatDataInitialized', 'true');
+            }
+        });
+    </script>
+</body>
+</html>
